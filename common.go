@@ -4,12 +4,14 @@ type SCommonAttributes[T any] struct {
 	Name        string `json:"name"`
 	Value       T      `json:"value"`
 	Description string `json:"description"`
+	Required    bool   `json:"required"`
 }
 
 type ICommonInterface interface {
 	GetValue() any
 	GetName() string
 	GetDescription() string
+	GetRequired() bool
 }
 
 type ICommonAttributeChange[T any, V any] interface {
@@ -25,6 +27,7 @@ func newCommanAttributes[T any](name string) SCommonAttributes[T] {
 		Name:        name,
 		Value:       val,
 		Description: "",
+		Required:    false,
 	}
 }
 
@@ -34,6 +37,10 @@ func (common *SCommonAttributes[T]) GetValue() any {
 
 func (common *SCommonAttributes[T]) GetDescription() string {
 	return common.Description
+}
+
+func (common *SCommonAttributes[T]) GetRequired() bool {
+	return common.Required
 }
 
 func (common *SCommonAttributes[T]) GetName() string {

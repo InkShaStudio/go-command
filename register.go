@@ -21,8 +21,23 @@ func RegisterCommand(cmd *SCommand) *cobra.Command {
 		panic(fmt.Sprintf("parse %s command arg %s error, should is %T, but get %T", cmd, arg, v, getV))
 	}
 
+	usage := cmd.Name
+	required := true
+
+	for _, arg := range cmd.Args {
+		if arg.GetRequired() {
+			if required {
+				panic(fmt.Sprintf("command %s: required arg %s cannot be after optional arg", cmd.Name, arg.GetName()))
+			}
+			usage += fmt.Sprintf(" <%s>", arg.GetName())
+		} else {
+			required = false
+			usage += fmt.Sprintf(" [%s]", arg.GetName())
+		}
+	}
+
 	command := &cobra.Command{
-		Use:   cmd.Name,
+		Use:   usage,
 		Short: cmd.Description,
 		Long:  cmd.Description,
 		Args:  args_count,
